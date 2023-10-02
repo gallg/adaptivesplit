@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.sklearn_interface.utils &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adaptivesplit.sklearn_interface.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adaptivesplit.sklearn_interface.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">..base.utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">get_scorer</span> <span class="k">as</span> <span class="n">sklearn_get_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">check_cv</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">check_scoring</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="get_sklearn_scorer"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.utils.get_sklearn_scorer">[docs]</a><span class="k">def</span> <span class="nf">get_sklearn_scorer</span><span class="p">(</span><span class="n">scoring</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Provides a scikit-learn scoring function given an input string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scoring (str, callable, list, tuple or dict):</span>
+<span class="sd">            Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.</span>
+<span class="sd">            If scoring represents a single score, one can use:</span>
+
+<span class="sd">            - a single string (see The scoring parameter: defining model evaluation rules);</span>
+<span class="sd">            - a callable (see Defining your scoring strategy from metric functions) that returns a single value.</span>
+
+<span class="sd">            If scoring represents multiple scores, one can use:</span>
+
+<span class="sd">            - a list or tuple of unique strings;</span>
+<span class="sd">            - a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</span>
+<span class="sd">            - a dictionary with metric names as keys and callables a values.</span>
+
+<span class="sd">            If None, the estimator’s score method is used. Defaults to &quot;scoring&quot; as specified in the configuration file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        score_func (callable):</span>
+<span class="sd">            Scikit-Learn scoring function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scoring</span> <span class="o">=</span> <span class="n">sklearn_get_scorer</span><span class="p">(</span><span class="n">scoring</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">score_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">scoring</span><span class="o">.</span><span class="n">_sign</span> <span class="o">*</span> <span class="n">scoring</span><span class="o">.</span><span class="n">_score_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> 
+        <span class="c1"># _score_func had a **kwargs argument that amounted to {random_seed:None}</span>
+        <span class="c1"># it crashes since the function does not accept a random_seed argument</span>
+        <span class="c1"># see also power.py;</span>
+
+    <span class="n">score_fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;sklearn_&#39;</span> <span class="o">+</span> <span class="n">scoring</span><span class="o">.</span><span class="n">_score_func</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">return</span> <span class="n">score_fun</span></div>
+
+
+<div class="viewcode-block" id="statfun_as_callable"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.utils.statfun_as_callable">[docs]</a><span class="k">def</span> <span class="nf">statfun_as_callable</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a statistical function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stat_fun (str, callable): </span>
+<span class="sd">            If this is a str, use sklearn.metrics.get_sklearn_scorer to make</span>
+<span class="sd">            stat_fun a callable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        stat_fun (callable): </span>
+<span class="sd">            Statistical function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">get_sklearn_scorer</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">stat_fun</span></div>
+
+
+<div class="viewcode-block" id="calculate_ci"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.utils.calculate_ci">[docs]</a><span class="k">def</span> <span class="nf">calculate_ci</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="s1">&#39;95%&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate confidence intervals.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X (list, np.ndarray, pd.Series): </span>
+<span class="sd">            1D array of shape (n_samples,).</span>
+<span class="sd">        ci (str, optional): </span>
+<span class="sd">            Confidence level to Return. Defaults to &#39;95%&#39;.</span>
+<span class="sd">            90%, 95%, 98%, 99% are possible inputs. </span>
+<span class="sd">            </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        ci_lower: </span>
+<span class="sd">            Confidence intervals lower bound.</span>
+<span class="sd">        ci_upper:</span>
+<span class="sd">            Confidence intervals upper bound.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">ci</span> <span class="o">==</span> <span class="s1">&#39;90%&#39;</span><span class="p">:</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="mf">1.64</span>
+    <span class="k">elif</span> <span class="n">ci</span> <span class="o">==</span> <span class="s1">&#39;95%&#39;</span><span class="p">:</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="mf">1.96</span>
+    <span class="k">elif</span> <span class="n">ci</span> <span class="o">==</span> <span class="s1">&#39;98%&#39;</span><span class="p">:</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="mf">2.33</span>
+    <span class="k">elif</span> <span class="n">ci</span> <span class="o">==</span> <span class="s1">&#39;99%&#39;</span><span class="p">:</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="mf">2.58</span>
+
+    <span class="n">moe</span> <span class="o">=</span> <span class="n">Z</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)))</span>
+    <span class="n">ci_lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">moe</span>
+    <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="n">moe</span>
+    
+    <span class="k">return</span> <span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

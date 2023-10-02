@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.config &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adaptivesplit.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adaptivesplit.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">ROOT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CustomConfigParser"><a class="viewcode-back" href="../../adaptivesplit.html#adaptivesplit.config.CustomConfigParser">[docs]</a><span class="k">class</span> <span class="nc">CustomConfigParser</span><span class="p">(</span><span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom ConfigParser implementing interpolation. Inherits from configparser.ConfigParser. </span>
+<span class="sd">    Used to read AdaptiveSplit&#39;s configuration file which contains the default values for the</span>
+<span class="sd">    AdaptiveSplit main class and its &#39;stopping_rule&#39; method. Parameters for the main class are</span>
+<span class="sd">    specified in the &#39;adaptivesplit.sklearn_interface.split&#39; section of the documentation, while</span>
+<span class="sd">    the parameters for the stopping rule are described here.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        min_training_sample_size (int):</span>
+<span class="sd">            If not 0, the stopping rule considers necessary reaching a number of samples equal to</span>
+<span class="sd">            this paramater before finding a stop point. If &#39;min_score&#39; is not equal to -inf then</span>
+<span class="sd">            reaching the minimum training sample size and the minimum score acts as precondition for</span>
+<span class="sd">            all the other rules to be evaluated. Defaults to the corresponding value in the configuration</span>
+<span class="sd">            file. </span>
+<span class="sd">        target_power (float):</span>
+<span class="sd">            Target power to reach before a stopping point can be found. If 0, power rule is not evaluated.</span>
+<span class="sd">            Defaults to the corresponding value in the configuration file. </span>
+<span class="sd">        alpha (float):</span>
+<span class="sd">            Target p-val to reach before the slope of the power curve is calculated. Defaults to the </span>
+<span class="sd">            corresponding value in the configuration file. </span>
+<span class="sd">        min_score (int or float):</span>
+<span class="sd">            Minimum score to reach before finding a stopping point. See also the &#39;min_training_sample_size&#39;</span>
+<span class="sd">            argument for more information. Defaults to the corresponding value in the configuration file. </span>
+<span class="sd">        min_relevant_score (int or float):</span>
+<span class="sd">            If not 0, learning curve rule is evaluated and a stopping point is found when the scores stabilize</span>
+<span class="sd">            (useful in case of power curve plateaus). Defaults to the corresponding value in the configuration</span>
+<span class="sd">            file. </span>
+<span class="sd">        min_validation_sample_size (int):</span>
+<span class="sd">            If not 0, specifies the minimum size of the validation sample, which coincides with the last possible</span>
+<span class="sd">            stopping point. Defaults to the corresponding value in the configuration file. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="nf">getlist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">))</span></div>
+
+<span class="n">settings</span> <span class="o">=</span> <span class="n">CustomConfigParser</span><span class="p">(</span><span class="n">allow_no_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">settings</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ROOT_DIR</span><span class="p">,</span> <span class="s1">&#39;settings.conf&#39;</span><span class="p">))</span>
+
+<span class="c1"># Stopping rule settings</span>
+<span class="n">_min_training_sample_size_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;min_training_sample_size&#39;</span><span class="p">)</span>
+<span class="n">_target_power_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;target_power&#39;</span><span class="p">)</span>
+<span class="n">_alpha_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">)</span>
+<span class="n">_min_relevant_score_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;min_relevant_score&#39;</span><span class="p">)</span>
+<span class="n">_min_validation_sample_size_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;min_validation_sample_size&#39;</span><span class="p">)</span>
+<span class="n">_window_size_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;window_size&#39;</span><span class="p">)</span>
+<span class="n">_step_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">)</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">_min_score_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;STOPPING_RULE&#39;</span><span class="p">,</span> <span class="s1">&#39;min_score&#39;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;min_score expected as float, is set to -np.inf&quot;</span><span class="p">)</span>
+    <span class="n">_min_score_</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+
+<span class="c1"># ------------------------------------------------</span>
+<span class="c1"># AdaptiveSplit settings</span>
+<span class="n">_cv_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;cv&#39;</span><span class="p">)</span>
+<span class="n">_bootstrap_samples_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;bootstrap_samples&#39;</span><span class="p">)</span>
+<span class="n">_power_bootstrap_samples_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;power_bootstrap_samples&#39;</span><span class="p">)</span>
+<span class="n">_n_jobs_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;n_jobs&#39;</span><span class="p">)</span>
+<span class="n">_scoring_</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">][</span><span class="s1">&#39;scoring&#39;</span><span class="p">]</span>
+<span class="n">_total_sample_size_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;total_sample_size&#39;</span><span class="p">)</span>
+<span class="n">_stratify_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;stratify&#39;</span><span class="p">)</span>
+<span class="n">_fast_mode_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;fast_mode&#39;</span><span class="p">)</span>
+<span class="n">_sample_size_multiplier_</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;AdaptiveSplit&#39;</span><span class="p">,</span> <span class="s1">&#39;sample_size_multiplier&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">_stratify_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">_stratify_</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

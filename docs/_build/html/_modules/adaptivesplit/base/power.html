@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.base.power &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adaptivesplit.base.power</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adaptivesplit.base.power</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">statfun_as_callable</span><span class="p">,</span> <span class="n">_optional_import_</span>
+<span class="kn">from</span> <span class="nn">.learning_curve</span> <span class="kn">import</span> <span class="n">LearningCurveFit</span>
+<span class="kn">from</span> <span class="nn">.resampling</span> <span class="kn">import</span> <span class="n">PermTest</span><span class="p">,</span> <span class="n">Resample</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># bootstrap algorithm:</span>
+<span class="sd"> - sample with replacement: n subject, n target value</span>
+<span class="sd"> - calculate p-value on the sample</span>
+<span class="sd"> - power: fraction of p-values lower than alpha</span>
+<span class="sd"> </span>
+<span class="sd"> Advantage: less assumptions</span>
+<span class="sd"> Disadvantage: Bootstrap is only possible if X and y is put in.</span>
+<span class="sd"> </span>
+<span class="sd"># Monte-carlo method:</span>
+<span class="sd"> - assume a null distribution (e.g. normal)</span>
+<span class="sd"> - estimate effect size based on score value (different for each score)</span>
+<span class="sd"> - do MC simulations</span>
+<span class="sd"> - calculate po-values</span>
+<span class="sd"> - power: fraction of p-values lower than alpha</span>
+<span class="sd"> </span>
+<span class="sd"> Advantage: works when only learning curve data is present</span>
+<span class="sd"> Disadvantage: strong assumptions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">scipy_pearsonr</span> <span class="o">=</span> <span class="n">_optional_import_</span><span class="p">(</span><span class="s2">&quot;scipy.stats&quot;</span><span class="p">,</span> <span class="s2">&quot;pearsonr&quot;</span><span class="p">,</span> <span class="s2">&quot;scipy&quot;</span><span class="p">)</span>
+<span class="n">scipy_spearmanr</span> <span class="o">=</span> <span class="n">_optional_import_</span><span class="p">(</span><span class="s2">&quot;scipy.stats&quot;</span><span class="p">,</span> <span class="s2">&quot;spearmanr&quot;</span><span class="p">,</span> <span class="s2">&quot;scipy&quot;</span><span class="p">)</span>
+<span class="n">scipy_kendalltau</span> <span class="o">=</span> <span class="n">_optional_import_</span><span class="p">(</span><span class="s2">&quot;scipy.stats&quot;</span><span class="p">,</span> <span class="s2">&quot;kendalltau&quot;</span><span class="p">,</span> <span class="s2">&quot;scipy&quot;</span><span class="p">)</span>
+
+<span class="c1"># Statistic functions for power calculation</span>
+<span class="c1"># dictionary to hold all functions</span>
+<span class="n">_stat_funs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span> <span class="nf">as_stat_fun</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="n">_stat_funs</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_statfun_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">f</span>
+
+
+<span class="nd">@as_stat_fun</span>
+<span class="k">def</span> <span class="nf">_statfun_permtest</span><span class="p">(</span><span class="n">permtest_statfun</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;greater&quot;</span><span class="p">,</span> <span class="n">num_perm</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">score_fun</span> <span class="o">=</span> <span class="n">statfun_as_callable</span><span class="p">(</span><span class="n">permtest_statfun</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;greater&quot;</span> <span class="ow">or</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;two_sided&quot;</span><span class="p">:</span>
+        <span class="n">compare</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">ge</span>
+    <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">&quot;less&quot;</span><span class="p">:</span>
+        <span class="n">compare</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">le</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;alternative can be any of [&#39;greater&#39;, &#39;less&#39;, &#39;two_sided&#39;]&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;two_sided&#39;</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">stat_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">score_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">stat_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">score_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">power_stat_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PermTest</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">num_perm</span><span class="p">,</span>
+                        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="n">compare</span><span class="p">)</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span>
+
+    <span class="n">power_stat_fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="s1">&#39;permtest_&#39;</span> <span class="o">+</span> <span class="n">permtest_statfun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">alternative</span>
+
+    <span class="k">return</span> <span class="n">power_stat_fun</span>
+
+
+<span class="nd">@as_stat_fun</span>
+<span class="k">def</span> <span class="nf">_statfun_scipystats_custom</span><span class="p">(</span><span class="n">scipy_stats_fun</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># simply return the second value, which is the p-value</span>
+    <span class="k">def</span> <span class="nf">stat_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">x</span><span class="p">[:])</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[:])):</span>
+            <span class="c1"># this is to trick ConstantInputWarning #todo: more elegant solution?</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="n">stat</span><span class="p">,</span> <span class="n">p_val</span> <span class="o">=</span> <span class="n">scipy_stats_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># return the p-value only</span>
+        <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;greater&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stat</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p_val</span> <span class="o">=</span> <span class="n">p_val</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p_val</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_val</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;less&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stat</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">p_val</span> <span class="o">=</span> <span class="n">p_val</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p_val</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_val</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">alternative</span> <span class="o">!=</span> <span class="s1">&#39;two_sided&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;alternative can be any of [&#39;greater&#39;, &#39;less&#39;, &#39;two_sided&#39;]&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">p_val</span>
+
+    <span class="n">stat_fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">scipy_stats_fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">alternative</span>
+    <span class="k">return</span> <span class="n">stat_fun</span>
+
+
+<span class="nd">@as_stat_fun</span>
+<span class="k">def</span> <span class="nf">_statfun_pearsonr</span><span class="p">(</span><span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">scipy_pearsonr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_stat_funs</span><span class="p">[</span><span class="s1">&#39;scipystats_custom&#39;</span><span class="p">](</span><span class="n">scipy_pearsonr</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="nd">@as_stat_fun</span>
+<span class="k">def</span> <span class="nf">_statfun_spearmanr</span><span class="p">(</span><span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_stat_funs</span><span class="p">[</span><span class="s1">&#39;scipystats_custom&#39;</span><span class="p">](</span><span class="n">scipy_spearmanr</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="nd">@as_stat_fun</span>
+<span class="k">def</span> <span class="nf">_statfun_kendalltau</span><span class="p">(</span><span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_stat_funs</span><span class="p">[</span><span class="s1">&#39;scipystats_custom&#39;</span><span class="p">](</span><span class="n">scipy_kendalltau</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="c1"># add extra statfuns with the @as_stat_fun annotation</span>
+
+
+<span class="k">def</span> <span class="nf">get_power_stat_funs</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_stat_funs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+
+<span class="k">def</span> <span class="nf">create_power_stat_fun</span><span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_stat_funs</span><span class="p">[</span><span class="nb">type</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_PowerEstimatorBase</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power_stat_fun</span><span class="p">,</span>
+                 <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">total_sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Estimating Power&#39;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_stat_fun</span> <span class="o">=</span> <span class="n">power_stat_fun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_sample_size</span> <span class="o">=</span> <span class="n">total_sample_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+
+    <span class="k">def</span> <span class="nf">_get_power_sample_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_sample_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_sample_size</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sample_size</span>
+
+    <span class="k">def</span> <span class="nf">_update_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_statfun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_sate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_defaults</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+                              <span class="n">power_statfun</span><span class="o">=</span><span class="n">power_statfun</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_power_sample_size</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;power of &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_stat_fun</span><span class="o">.</span><span class="vm">__name__</span>
+
+
+<div class="viewcode-block" id="PowerEstimatorBootstrap"><a class="viewcode-back" href="../../../adaptivesplit.base.html#adaptivesplit.base.power.PowerEstimatorBootstrap">[docs]</a><span class="k">class</span> <span class="nc">PowerEstimatorBootstrap</span><span class="p">(</span><span class="n">_PowerEstimatorBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate power using bootstrap.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        power_stat_fun (callable): </span>
+<span class="sd">            Statistical function used to calculate power.</span>
+<span class="sd">        stratify (int): </span>
+<span class="sd">            For classification tasks. If not None, use stratified sampling to account for class labels imbalance. </span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        total_sample_size (int): </span>
+<span class="sd">            The total number of samples in the data given as input. Defaults to None.</span>
+<span class="sd">        alpha (float): </span>
+<span class="sd">            Statistical threshold used to calculate power. Defaults to 0.001.</span>
+<span class="sd">        bootstrap_samples (int): </span>
+<span class="sd">            Number of samples selected during bootstrapping. Defaults to 100.</span>
+<span class="sd">        n_jobs (int): </span>
+<span class="sd">            Number of jobs to run in parallel. Defaults to None. Power calculations are parallelized </span>
+<span class="sd">            over the cross-validation splits. None means 1 unless in a joblib.parallel_backend context.</span>
+<span class="sd">            -1 means using all processors.</span>
+<span class="sd">        verbose (bool): </span>
+<span class="sd">            Prints progress. Defaults to True.</span>
+<span class="sd">        message (str, optional): </span>
+<span class="sd">            Message shown when power estimation starts. Defaults to &#39;Estimating Power with bootstrap&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">power_stat_fun</span><span class="p">,</span>
+                 <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">total_sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                 <span class="n">bootstrap_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Estimating Power with bootstrap&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">power_stat_fun</span><span class="o">=</span><span class="n">power_stat_fun</span><span class="p">,</span>
+                         <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">,</span>
+                         <span class="n">total_sample_size</span><span class="o">=</span><span class="n">total_sample_size</span><span class="p">,</span>
+                         <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+                         <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                         <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_samples</span> <span class="o">=</span> <span class="n">bootstrap_samples</span>
+
+    <span class="c1"># for calculating power</span>
+    <span class="k">def</span> <span class="nf">estimate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_statfun</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">stratify</span><span class="p">,</span> <span class="n">power_statfun</span><span class="p">,</span>
+                         <span class="n">random_seed</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># print(self.sample_size)</span>
+
+        <span class="n">resampler</span> <span class="o">=</span> <span class="n">Resample</span><span class="p">(</span><span class="n">stat_fun</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">power_stat_fun</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">,</span>
+                             <span class="n">num_samples</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_samples</span><span class="p">,</span>
+                             <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+                             <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">resampler</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stratify</span><span class="p">)</span>
+        <span class="n">stat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span> <span class="n">nan</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">power</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stat</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bootstrap_samples</span>
+        <span class="k">return</span> <span class="n">power</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_sample_sizes</span><span class="p">(</span><span class="n">sample_sizes</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">current_sample_size</span><span class="p">,</span> <span class="n">total_sample_size</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">sample_sizes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;sample_sizes and step are mutually exclusive parameters.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">sample_sizes</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sample_sizes</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sample_sizes</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">total_sample_size</span> <span class="o">-</span> <span class="n">current_sample_size</span><span class="p">)</span> <span class="o">/</span> <span class="n">sample_sizes</span><span class="p">)</span>
+        <span class="n">sample_sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">current_sample_size</span><span class="p">,</span> <span class="n">total_sample_size</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
+    <span class="c1"># else: sample sizes are given explicitly as a list/array</span>
+    <span class="k">return</span> <span class="n">sample_sizes</span>
+
+
+<span class="c1"># a simple prediction method assuming that training accuracy stays constant</span>
+<span class="c1"># this is most of the times a lower bound</span>
+<span class="k">def</span> <span class="nf">predict_power</span><span class="p">(</span><span class="n">y_true_last</span><span class="p">,</span> <span class="n">y_pred_last</span><span class="p">,</span> <span class="n">power_estimator</span><span class="p">,</span>
+                  <span class="n">total_sample_size</span><span class="p">,</span> <span class="n">sample_sizes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">sample_sizes</span> <span class="o">=</span> <span class="n">_get_sample_sizes</span><span class="p">(</span><span class="n">sample_sizes</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred_last</span><span class="p">),</span> <span class="n">total_sample_size</span><span class="p">)</span>
+
+    <span class="n">power</span> <span class="o">=</span> <span class="n">power_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_true_last</span><span class="p">,</span>
+                                     <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_last</span><span class="p">,</span>
+                                     <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_sizes</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">LearningCurveFit</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">power</span><span class="p">,</span>
+                            <span class="n">ns</span><span class="o">=</span><span class="n">sample_sizes</span><span class="p">,</span>
+                            <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;power&quot;</span><span class="p">,</span>
+                            <span class="n">curve_type</span><span class="o">=</span><span class="s2">&quot;predicted power&quot;</span><span class="p">,</span>
+                            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;predicted power&quot;</span><span class="p">,</span>
+                            <span class="n">method</span><span class="o">=</span><span class="s2">&quot;keeplast&quot;</span><span class="p">,</span>
+                            <span class="n">fun</span><span class="o">=</span><span class="n">power_estimator</span><span class="p">,</span>
+                            <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">r2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

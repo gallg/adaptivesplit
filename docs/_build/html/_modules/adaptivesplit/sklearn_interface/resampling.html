@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.sklearn_interface.resampling &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adaptivesplit.sklearn_interface.resampling</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adaptivesplit.sklearn_interface.resampling</h1><div class="highlight"><pre>
+<span></span><span class="c1"># extends adaptivesplit.base.resampling with scikit-learn functionality</span>
+
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">is_classifier</span><span class="p">,</span> <span class="n">is_regressor</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">check_cv</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">statfun_as_callable</span> <span class="k">as</span> <span class="n">utils_statfun_as_callable</span>
+<span class="kn">from</span> <span class="nn">..base.resampling</span> <span class="kn">import</span> <span class="n">Resample</span> <span class="k">as</span> <span class="n">BaseResample</span>
+<span class="kn">from</span> <span class="nn">..base.resampling</span> <span class="kn">import</span> <span class="n">PermTest</span> <span class="k">as</span> <span class="n">BasePermTest</span>
+
+
+<div class="viewcode-block" id="PermTest"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.PermTest">[docs]</a><span class="k">class</span> <span class="nc">PermTest</span><span class="p">(</span><span class="n">BasePermTest</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implements a permutation test.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_set_stat_fun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stat_fun</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat_fun</span> <span class="o">=</span> <span class="n">utils_statfun_as_callable</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Resample"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.Resample">[docs]</a><span class="k">class</span> <span class="nc">Resample</span><span class="p">(</span><span class="n">BaseResample</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implements the resampling strategy.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_set_stat_fun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stat_fun</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat_fun</span> <span class="o">=</span> <span class="n">utils_statfun_as_callable</span><span class="p">(</span><span class="n">stat_fun</span><span class="p">)</span></div>
+
+
+<span class="n">SubSampledStats</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SubsampledStats&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;train_score&#39;</span><span class="p">,</span> <span class="s1">&#39;test_score&#39;</span><span class="p">,</span> <span class="s1">&#39;dummy_score&#39;</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;Stores results given by &quot;SubSampleCV&quot;.&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="SubSampleCV"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.SubSampleCV">[docs]</a><span class="k">class</span> <span class="nc">SubSampleCV</span><span class="p">(</span><span class="n">Resample</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates learning performance/power on subsamples of the whole data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        estimator (estimator object): </span>
+<span class="sd">            This is assumed to implement the scikit-learn estimator interface.</span>
+<span class="sd">        sample_size (int): </span>
+<span class="sd">            Current sample size.</span>
+<span class="sd">        dummy_estimator (estimator object):</span>
+<span class="sd">            A scikit-learn-like dummy estimator to evaluate baseline performance. Defaults to None.</span>
+<span class="sd">            If None, either DummyClassifier() or DummyRegressor() are used, based on &#39;estimator&#39;s type.</span>
+<span class="sd">        num_samples (int):</span>
+<span class="sd">            Number of iterations to shuffle data before determining subsamples. Defaults to 100.</span>
+<span class="sd">            The first iteration (index 0) is ALWAYS unshuffled (num_samples=1 implies no resampling at all).</span>
+<span class="sd">        cv (int, cross-validation generator or an iterable):</span>
+<span class="sd">            Determines the cross-validation splitting strategy, as in scikit-learn. Possible inputs for cv are:</span>
+<span class="sd">            </span>
+<span class="sd">            - None, to use the default 5-fold cross validation,</span>
+<span class="sd">            - int, to specify the number of folds in a (Stratified)KFold,</span>
+<span class="sd">            - CV splitter,</span>
+<span class="sd">            - An iterable yielding (train, test) splits as arrays of indices.</span>
+<span class="sd">            </span>
+<span class="sd">            For int/None inputs, if the estimator is a classifier and y is either binary or multiclass,</span>
+<span class="sd">            StratifiedKFold is used. In all other cases, K-Fold is used. These splitters are instantiated</span>
+<span class="sd">            with shuffle=False so the splits will be the same across calls. Defaults to None.</span>
+<span class="sd">        cv_stat (callable):</span>
+<span class="sd">            Function for aggregating cross-validation-wise scores. Defaults to numpy.mean.</span>
+<span class="sd">        groups (array-like of shape (n_samples,)): </span>
+<span class="sd">            Group labels for the samples used while splitting the dataset into train/test set. This ‘groups’ </span>
+<span class="sd">            parameter changes the cross-validation strategy from K-fold to GroupKfold as implemented in Scikit-Learn.</span>
+<span class="sd">            Defaults to None.</span>
+<span class="sd">        scoring (str, callable, list, tuple or dict): </span>
+<span class="sd">            Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.</span>
+<span class="sd">            If scoring represents a single score, one can use:</span>
+
+<span class="sd">            - a single string (see The scoring parameter: defining model evaluation rules);</span>
+<span class="sd">            - a callable (see Defining your scoring strategy from metric functions) that returns a single value.</span>
+
+<span class="sd">            If scoring represents multiple scores, one can use:</span>
+
+<span class="sd">            - a list or tuple of unique strings;</span>
+<span class="sd">            - a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</span>
+<span class="sd">            - a dictionary with metric names as keys and callables a values.</span>
+
+<span class="sd">            If None, the estimator’s score method is used. Defaults to None.</span>
+<span class="sd">        power_estimator (callable):</span>
+<span class="sd">            Callable must be a power_estimator function, see the &#39;create_power_estimator*&#39; factory functions.</span>
+<span class="sd">            If None, power curve is not calculated. Defaults to None.</span>
+<span class="sd">        n_jobs (int): </span>
+<span class="sd">            Number of jobs to run in parallel. Defaults to -1.</span>
+<span class="sd">            Training the estimator and computing the score are parallelized over the cross-validation splits.</span>
+<span class="sd">            None means 1 unless in a joblib.parallel_backend context. -1 means using all processors.</span>
+<span class="sd">        verbose (bool): </span>
+<span class="sd">            Prints progress. Defaults to True.</span>
+<span class="sd">        message (str): </span>
+<span class="sd">            Message shown during calculations. Defaults to &quot;Calculating learning curve&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            SubSampledStats (tuple):</span>
+<span class="sd">                Contains the power and scores obtained during training/test with subsampled data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">,</span> <span class="n">dummy_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cv_stat</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Calculating learning curve&quot;</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_stat</span> <span class="o">=</span> <span class="n">cv_stat</span>
+        <span class="k">if</span> <span class="n">scoring</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">score</span>  <span class="c1"># default scorer of the estimator</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scoring</span> <span class="o">=</span> <span class="n">scoring</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_estimator</span> <span class="o">=</span> <span class="n">power_estimator</span>
+
+        <span class="c1"># statfun to be evaluated in the outer re-sampling (subsampling).</span>
+        <span class="k">def</span> <span class="nf">stat_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+            <span class="n">cvfit</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                   <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span>
+                                   <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>
+                                   <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                   <span class="n">return_estimator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dummy_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cvfit_dummy</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">dummy_estimator</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">)</span>
+                <span class="n">dummy_score</span> <span class="o">=</span> <span class="n">cv_stat</span><span class="p">(</span><span class="n">cvfit_dummy</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dummy_score</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># get cross-validated predictions:</span>
+            <span class="k">if</span> <span class="n">power_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bestimators</span> <span class="o">=</span> <span class="n">cvfit</span><span class="p">[</span><span class="s2">&quot;estimator&quot;</span><span class="p">]</span>
+                <span class="n">cv</span> <span class="o">=</span> <span class="n">check_cv</span><span class="p">(</span><span class="n">cv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">is_classifier</span><span class="p">(</span><span class="n">estimator</span><span class="p">))</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">predicted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="c1"># instead of np.zeros(len(y))</span>
+                <span class="c1"># calculate cross-validated predictions</span>
+                <span class="k">for</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="p">):</span>
+                    <span class="n">predicted</span><span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="o">=</span> <span class="n">bestimators</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">test</span><span class="p">])</span>
+                    <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># calculate Power here:</span>
+                <span class="n">power</span> <span class="o">=</span> <span class="n">power_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predicted</span><span class="p">,</span>
+                                                 <span class="n">sample_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+                                                 <span class="n">power_statfun</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span>  <span class="c1"># this always overrides it! # todo: fixme</span>
+                                                 <span class="o">**</span><span class="n">kwargs</span>
+                                                 <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># one sample size only</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">power</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">train_score</span> <span class="o">=</span> <span class="n">cv_stat</span><span class="p">(</span><span class="n">cvfit</span><span class="p">[</span><span class="s2">&quot;train_score&quot;</span><span class="p">])</span>
+            <span class="n">test_score</span> <span class="o">=</span> <span class="n">cv_stat</span><span class="p">(</span><span class="n">cvfit</span><span class="p">[</span><span class="s2">&quot;test_score&quot;</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="n">SubSampledStats</span><span class="p">(</span><span class="n">train_score</span><span class="p">,</span> <span class="n">test_score</span><span class="p">,</span> <span class="n">dummy_score</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stat_fun</span><span class="o">=</span><span class="n">stat_fun</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span>
+                         <span class="n">replacement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SubSampleCV.subsample"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.SubSampleCV.subsample">[docs]</a>    <span class="k">def</span> <span class="nf">subsample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cv_stat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convenience function to run resampling.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_defaults</span><span class="p">(</span><span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">cv_stat</span><span class="o">=</span><span class="n">cv_stat</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">scoring</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="n">replacement</span><span class="p">,</span>
+                                  <span class="n">compare</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        
+
+<div class="viewcode-block" id="SubSampleCV.fit_transform"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.SubSampleCV.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">compare</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit model using the current sample size.&quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="n">replacement</span><span class="p">,</span>
+                                      <span class="n">compare</span><span class="o">=</span><span class="n">compare</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">random_seed</span><span class="p">,</span>
+                                      <span class="n">cv</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scoring</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span>  <span class="c1"># passed as kwargs</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>  <span class="c1"># ([&#39;train&#39;, &#39;test&#39;, &#39;dummy&#39;, &#39;power&#39;], num_samples, sample_size)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span></div>
+
+<div class="viewcode-block" id="SubSampleCV.plot"><a class="viewcode-back" href="../../../adaptivesplit.sklearn_interface.html#adaptivesplit.sklearn_interface.resampling.SubSampleCV.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Plot function to check outputs from resampling. By default this is unused.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">sample_size</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sample_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span>
+
+        <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="s1">&#39;dummy&#39;</span><span class="p">,</span> <span class="s1">&#39;power&#39;</span><span class="p">]</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;kind&#39;</span><span class="p">,</span> <span class="s1">&#39;line&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">s_i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sample_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">blend_hist</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;sample_size&#39;</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">titles</span><span class="p">[</span><span class="n">s_i</span><span class="p">])</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

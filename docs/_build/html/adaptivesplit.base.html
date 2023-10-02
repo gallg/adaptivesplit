@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.base package &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">adaptivesplit.base package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.base.learning_curve">adaptivesplit.base.learning_curve module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.base.power">adaptivesplit.base.power module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.base.resampling">adaptivesplit.base.resampling module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.base.split">adaptivesplit.base.split module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.base.utils">adaptivesplit.base.utils module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">adaptivesplit.base package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/adaptivesplit.base.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adaptivesplit-base-package">
+<h1>adaptivesplit.base package<a class="headerlink" href="#adaptivesplit-base-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-adaptivesplit.base.learning_curve">
+<span id="adaptivesplit-base-learning-curve-module"></span><h2>adaptivesplit.base.learning_curve module<a class="headerlink" href="#module-adaptivesplit.base.learning_curve" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.base.learning_curve.LearningCurve">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.learning_curve.</span></span><span class="sig-name descname"><span class="pre">LearningCurve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/learning_curve.html#LearningCurve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.learning_curve.LearningCurve" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for storing and handling learning curves.
+Wraps a pandas dataframe with rows for learning curves and columns for sample sizes
+It can handle multiple learning curves (e.g. for different bootstrap samples).</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>df (array-like, pandas.DataFrame): </dt><dd><p>Initialize by a DataFrame, already being in the correct format. Defaults to None.</p>
+</dd>
+<dt>ns (int): </dt><dd><p>Alias for number of samples (sample sizes). Defaults to None.</p>
+</dd>
+<dt>data (np.ndarray): </dt><dd><p>Array of shape (ns, n_curves). Contains score value per sample size. Defaults to None.</p>
+</dd>
+<dt>scoring (str, callable, list, tuple or dict): </dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to None.</p>
+</dd>
+<dt>curve_names (str, optional): </dt><dd><p>Curve names metadata. Defaults to None.</p>
+</dd>
+<dt>curve_type (str, optional): </dt><dd><p>Curve type metadata. Defaults to None.</p>
+</dd>
+<dt>description (str, optional): </dt><dd><p>Curve description. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.base.learning_curve.LearningCurve.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/learning_curve.html#LearningCurve.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.learning_curve.LearningCurve.dump" title="Permalink to this definition"></a></dt>
+<dd><p>Dump learning curve data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.base.learning_curve.LearningCurve.stat">
+<span class="sig-name descname"><span class="pre">stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'95%'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/learning_curve.html#LearningCurve.stat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.learning_curve.LearningCurve.stat" title="Permalink to this definition"></a></dt>
+<dd><p>Return simple descriptive learning curve stats (e.g for plotting purposes).
+Stat names should be given according to pandas.describe().
+Most common choices: ‘mean’, ‘50%’, ‘std’, ‘95%’.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>mid (str):</dt><dd><p>Stat to calculate mid value.</p>
+</dd>
+<dt>ci (str):</dt><dd><p>Confidence level.</p>
+</dd>
+</dl>
+</dd>
+<dt>Extra keywords:</dt><dd><p>‘stderr’ gives mid +- stderr/2</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.base.power">
+<span id="adaptivesplit-base-power-module"></span><h2>adaptivesplit.base.power module<a class="headerlink" href="#module-adaptivesplit.base.power" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.base.power.PowerEstimatorBootstrap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.power.</span></span><span class="sig-name descname"><span class="pre">PowerEstimatorBootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_stat_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_sample_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Estimating</span> <span class="pre">Power</span> <span class="pre">with</span> <span class="pre">bootstrap'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/power.html#PowerEstimatorBootstrap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.power.PowerEstimatorBootstrap" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_PowerEstimatorBase</span></code></p>
+<p>Calculate power using bootstrap.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>power_stat_fun (callable): </dt><dd><p>Statistical function used to calculate power.</p>
+</dd>
+<dt>stratify (int): </dt><dd><p>For classification tasks. If not None, use stratified sampling to account for class labels imbalance. 
+Defaults to None.</p>
+</dd>
+<dt>total_sample_size (int): </dt><dd><p>The total number of samples in the data given as input. Defaults to None.</p>
+</dd>
+<dt>alpha (float): </dt><dd><p>Statistical threshold used to calculate power. Defaults to 0.001.</p>
+</dd>
+<dt>bootstrap_samples (int): </dt><dd><p>Number of samples selected during bootstrapping. Defaults to 100.</p>
+</dd>
+<dt>n_jobs (int): </dt><dd><p>Number of jobs to run in parallel. Defaults to None. Power calculations are parallelized 
+over the cross-validation splits. None means 1 unless in a joblib.parallel_backend context.
+-1 means using all processors.</p>
+</dd>
+<dt>verbose (bool): </dt><dd><p>Prints progress. Defaults to True.</p>
+</dd>
+<dt>message (str, optional): </dt><dd><p>Message shown when power estimation starts. Defaults to ‘Estimating Power with bootstrap’.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.base.resampling">
+<span id="adaptivesplit-base-resampling-module"></span><h2>adaptivesplit.base.resampling module<a class="headerlink" href="#module-adaptivesplit.base.resampling" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.base.resampling.PermTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.resampling.</span></span><span class="sig-name descname"><span class="pre">PermTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs=-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare=&lt;built-in</span> <span class="pre">function</span> <span class="pre">ge&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message='Permutation</span> <span class="pre">test'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/resampling.html#PermTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.resampling.PermTest" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ResampleBase</span></code></p>
+<p>Implements a permutation test.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>stat_fun (callable): </dt><dd><p>Statistical function used to evaluate statistical significance.</p>
+</dd>
+<dt>num_samples (int): </dt><dd><p>Number of samples generated during permutation. Defaults to 1000.</p>
+</dd>
+<dt>n_jobs (int, optional): </dt><dd><p>Number of jobs to run in parallel. Defaults to -1. Power calculations are parallelized 
+over the cross-validation splits. None means 1 unless in a joblib.parallel_backend context.
+-1 means using all processors.</p>
+</dd>
+<dt>compare (callable): </dt><dd><p>User defined comparison function. Defaults to operator.ge.</p>
+</dd>
+<dt>verbose (bool, optional): </dt><dd><p>Prints progress. Defaults to True.</p>
+</dd>
+<dt>message (str, optional): </dt><dd><p>Message shown when permutation test starts. Defaults to “Permutation test”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.base.resampling.Resample">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.resampling.</span></span><span class="sig-name descname"><span class="pre">Resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_unshuffled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Resampling'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/resampling.html#Resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.resampling.Resample" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ResampleBase</span></code></p>
+<p>Implements re-sampling.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>stat_fun (callable): </dt><dd><p>User defined statistical function.</p>
+</dd>
+<dt>sample_size (int): </dt><dd><p>Current sample size.</p>
+</dd>
+<dt>stratify (int): </dt><dd><p>For classification tasks. If not None, use stratified sampling to account for class labels imbalance. 
+Defaults to None.</p>
+</dd>
+<dt>num_samples (int, optional): </dt><dd><p>Number of samples. Defaults to 1000.</p>
+</dd>
+<dt>replacement (bool, optional): </dt><dd><p>Whether or not to sample with replacement. Defaults to True.</p>
+</dd>
+<dt>first_unshuffled (bool, optional): </dt><dd><p>Whether or not to shuffle the samples first. Defaults to False.</p>
+</dd>
+<dt>n_jobs (int, optional): </dt><dd><p>Number of jobs to run in parallel. Defaults to -1. Power calculations are parallelized 
+over the cross-validation splits. None means 1 unless in a joblib.parallel_backend context.
+-1 means using all processors.</p>
+</dd>
+<dt>verbose (bool, optional): </dt><dd><p>Print progress. Defaults to True.</p>
+</dd>
+<dt>message (str, optional): </dt><dd><p>Message shown when resampling starts. Defaults to “Resampling”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.base.split">
+<span id="adaptivesplit-base-split-module"></span><h2>adaptivesplit.base.split module<a class="headerlink" href="#module-adaptivesplit.base.split" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.base.split.estimate_sample_size">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.split.</span></span><span class="sig-name descname"><span class="pre">estimate_sample_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_obs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_power</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_pwr_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/split.html#estimate_sample_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.split.estimate_sample_size" title="Permalink to this definition"></a></dt>
+<dd><p>Compute current sample size for power calculations.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>y_obs (np.ndarray): </dt><dd><p>The observed target samples.</p>
+</dd>
+<dt>y_pred (np.ndarray): </dt><dd><p>The predicted target samples.</p>
+</dd>
+<dt>target_power (float): </dt><dd><p>Target power.</p>
+</dd>
+<dt>power_estimator (adaptivesplit.power.PowerEstimatorBootstrap): </dt><dd><p>Estimator to calculate power.</p>
+</dd>
+<dt>max_iter (int): </dt><dd><p>Max number of iterations for sample estimation. Defaults to 100.</p>
+</dd>
+<dt>rel_pwr_threshold (float): </dt><dd><p>Power threshold’s tolerance. Defaults to 0.001.</p>
+</dd>
+<dt>learning_rate (float): </dt><dd><p>The learning rate value. Defaults to 0.05.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>sample_size (int): </dt><dd><p>The estimated sample size.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.base.split.plot">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.split.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">learning_curve</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_curve_predicted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_curve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_curve_lower</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_curve_upper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_curve_predicted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_curve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_curve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'95%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subplot_kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridspec_kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/split.html#plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.split.plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the results.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>learning_curve (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>The learning curve calculated during validation.</p>
+</dd>
+<dt>learning_curve_predicted (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>The predicted learning curve. Defaults to None.</p>
+</dd>
+<dt>power_curve (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>The calculated power curve. Defaults to None.</p>
+</dd>
+<dt>power_curve_lower (): </dt><dd><p>Power curve confidence intervals lower bound. Defaults to None.</p>
+</dd>
+<dt>power_curve_upper (): </dt><dd><p>Power curve confidence intervals upper bound. Defaults to None.</p>
+</dd>
+<dt>power_curve_predicted (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>The predicted power curve. Defaults to None.</p>
+</dd>
+<dt>training_curve (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>Learning curve calculated during training. Defaults to None.</p>
+</dd>
+<dt>dummy_curve (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>Baseline curve calculated using a dummy estimator. Defaults to None.</p>
+</dd>
+<dt>stop (int): </dt><dd><p>Sample size where the stopping point lies. Defaults to None.</p>
+</dd>
+<dt>reason (str or list of str): </dt><dd><p>Reason or list of reasons describing how the stopping rule found the stopping point. Defaults to None.</p>
+</dd>
+<dt>ci (str): </dt><dd><p>Intervals confidence for the learning curve. Defaults to ‘95%’.</p>
+</dd>
+<dt>grid (bool): </dt><dd><p>Whether or not to configure the grid lines. Defaults to True.</p>
+</dd>
+<dt>subplot_kw (dict): </dt><dd><p>Dict with keywords passed to matplotlib used to create each subplot. Defaults to None.</p>
+</dd>
+<dt>gridspec_kw (dict): </dt><dd><p>Dict with keywords passed to matplotlib used to create the grid the subplots are placed on. Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Figure (matplotlib.pyplot.figure): </dt><dd><p>Plot containing the learning and power curves with the estimated stopping point.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.base.utils">
+<span id="adaptivesplit-base-utils-module"></span><h2>adaptivesplit.base.utils module<a class="headerlink" href="#module-adaptivesplit.base.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.base.utils.tqdm_joblib">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.base.utils.</span></span><span class="sig-name descname"><span class="pre">tqdm_joblib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tqdm_object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/base/utils.html#tqdm_joblib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.base.utils.tqdm_joblib" title="Permalink to this definition"></a></dt>
+<dd><p>Context manager to patch joblib to report into tqdm progress bar given as argument
+Based on: <a class="reference external" href="https://stackoverflow.com/questions/37804279/how-can-we-use-tqdm-in-a-parallel-execution-with-joblib">https://stackoverflow.com/questions/37804279/how-can-we-use-tqdm-in-a-parallel-execution-with-joblib</a></p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

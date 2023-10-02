@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.sklearn_interface package &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">adaptivesplit.sklearn_interface package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.sklearn_interface.learning_curve">adaptivesplit.sklearn_interface.learning_curve module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.sklearn_interface.power">adaptivesplit.sklearn_interface.power module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.sklearn_interface.resampling">adaptivesplit.sklearn_interface.resampling module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.sklearn_interface.split">adaptivesplit.sklearn_interface.split module</a></li>
+<li><a class="reference internal" href="#module-adaptivesplit.sklearn_interface.utils">adaptivesplit.sklearn_interface.utils module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">adaptivesplit.sklearn_interface package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/adaptivesplit.sklearn_interface.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adaptivesplit-sklearn-interface-package">
+<h1>adaptivesplit.sklearn_interface package<a class="headerlink" href="#adaptivesplit-sklearn-interface-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-adaptivesplit.sklearn_interface.learning_curve">
+<span id="adaptivesplit-sklearn-interface-learning-curve-module"></span><h2>adaptivesplit.sklearn_interface.learning_curve module<a class="headerlink" href="#module-adaptivesplit.sklearn_interface.learning_curve" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.learning_curve.calculate_learning_curve">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.learning_curve.</span></span><span class="sig-name descname"><span class="pre">calculate_learning_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_stat=&lt;function</span> <span class="pre">mean&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/learning_curve.html#calculate_learning_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.learning_curve.calculate_learning_curve" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate learning curve on training and test data. Also generates a learning curve for baseline performance using dummy estimators.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>estimator (estimator object): </dt><dd><p>Estimator object. A object of that type is instantiated for each grid point.
+This is assumed to implement the scikit-learn estimator interface. Either estimator needs to provide a score
+function, or scoring must be passed. If it is e.g. a GridSearchCV then nested cv is performed (recommended).</p>
+</dd>
+<dt>X (numpy.ndarray or pandas.DataFrame):</dt><dd><p>array-like of shape (n_samples, n_features). The data to fit as in scikit-learn. Can be a numpy array or 
+pandas DataFrame.</p>
+</dd>
+<dt>y (numpy.ndarray or pandas.Series):</dt><dd><p>array-like of shape (n_samples,) or (n_samples, n_outputs), default=None
+The target variable to try to predict in the case of supervised learning, as in scikit-learn.</p>
+</dd>
+<dt>sample_sizes (int or list of int):</dt><dd><p>sample sizes to calculate the learning curve.</p>
+</dd>
+<dt>stratify (int):</dt><dd><p>For classification tasks. If not None, use stratified sampling to account for class labels imbalance.
+Defaults to None.</p>
+</dd>
+<dt>cv (int, cross-validation generator or an iterable):</dt><dd><p>Determines the cross-validation splitting strategy, as in scikit-learn. Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross validation,</p></li>
+<li><p>int, to specify the number of folds in a (Stratified)KFold,</p></li>
+<li><p>CV splitter,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, if the estimator is a classifier and y is either binary or multiclass, StratifiedKFold 
+is used. In all other cases, K-Fold is used. These splitters are instantiated with shuffle=False so 
+the splits will be the same across calls. Defaults to 5.</p>
+</dd>
+<dt>cv_stat (callable):</dt><dd><p>Function for aggregating cross-validation-wise scores. Defaults to numpy.mean.</p>
+</dd>
+<dt>dummy_estimator (estimator object):</dt><dd><p>A scikit-learn-like dummy estimator to evaluate baseline performance.
+If None, either DummyClassifier() or DummyRegressor() are used, based on ‘estimator’s type.</p>
+</dd>
+<dt>num_samples (int):</dt><dd><p>Number of iterations to shuffle data before determining subsamples.
+The first iteration (index 0) is ALWAYS unshuffled (num_samples=1 implies no resampling at all, default).</p>
+</dd>
+<dt>power_estimator (callable):</dt><dd><p>Callable must be a power_estimator function, see the ‘create_power_estimator*’ factory functions.
+If None, power curve is not calculated. Defaults to None.</p>
+</dd>
+<dt>scoring (str, callable, list, tuple or dict):</dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to None.</p>
+</dd>
+<dt>verbose (bool):</dt><dd><p>If not False, prints progress. Defaults to True.</p>
+</dd>
+<dt>n_jobs (int):</dt><dd><p>Number of jobs to run in parallel. Defaults to None.
+Training the estimator and computing the score are parallelized over the cross-validation splits.
+None means 1 unless in a joblib.parallel_backend context. -1 means using all processors.</p>
+</dd>
+<dt>random_state (int):</dt><dd><p>Controls the randomness of the bootstrapping of the samples used when building sub-samples 
+(if shuffle!=-1). Defaults to None.</p>
+</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>args: </dt><dd><p>Extra parameters passed to sklearn.model_selection.cross_validate.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs:</dt><dd><p>Extra keyword parameters passed to sklearn.model_selection.cross_validate.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>lc_train (adaptivesplit.base.learning_curve.LearningCurve object): </dt><dd><p>Learning curve calculated on training data.</p>
+</dd>
+<dt>lc_test (adaptivesplit.base.learning_curve.LearningCurve object):</dt><dd><p>Learning curve calculated on test data.</p>
+</dd>
+<dt>lc_dummy (adaptivesplit.base.learning_curve.LearningCurve object):</dt><dd><p>Learning curve calculated using the dummy estimator. It estimates baseline learning performance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.sklearn_interface.power">
+<span id="adaptivesplit-sklearn-interface-power-module"></span><h2>adaptivesplit.sklearn_interface.power module<a class="headerlink" href="#module-adaptivesplit.sklearn_interface.power" title="Permalink to this heading"></a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.power.PredictedScoreAndPower">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.power.</span></span><span class="sig-name descname"><span class="pre">PredictedScoreAndPower</span></span><a class="headerlink" href="#adaptivesplit.sklearn_interface.power.PredictedScoreAndPower" title="Permalink to this definition"></a></dt>
+<dd><p>Returned by the “predict_power_curve” function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.power.predict_power_curve">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.power.</span></span><span class="sig-name descname"><span class="pre">predict_power_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_sample_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/power.html#predict_power_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.power.predict_power_curve" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>If total_sample_size &gt; len(y) predicts the power curve trend to show what happens</dt><dd><p>when the sample size is higher.</p>
+</dd>
+<dt>Args:</dt><dd><dl>
+<dt>estimator (estimator object): </dt><dd><p>This is assumed to implement the scikit-learn estimator interface.</p>
+</dd>
+<dt>X (numpy.ndarray or pandas.DataFrame): </dt><dd><p>array-like of shape (n_samples, n_features). The data to fit as in scikit-learn. Can be a numpy array or 
+pandas DataFrame.</p>
+</dd>
+<dt>y (numpy.ndarray or pandas.Series): </dt><dd><p>array-like of shape (n_samples,) or (n_samples, n_outputs), default=None
+The target variable to try to predict in the case of supervised learning, as in scikit-learn.</p>
+</dd>
+<dt>power_estimator (callable): </dt><dd><p>Must be a power_estimator function, see the ‘create_power_estimator*’ factory functions.</p>
+</dd>
+<dt>total_sample_size (int): </dt><dd><p>The total number of samples in the data given as input.</p>
+</dd>
+<dt>stratify (int): </dt><dd><p>For classification tasks. If not None, use stratified sampling to account for class labels imbalance. 
+Defaults to None.</p>
+</dd>
+<dt>sample_sizes (int or list of int): </dt><dd><p>Sample sizes to calculate the power curve. Defaults to None.</p>
+</dd>
+<dt>step (int): </dt><dd><p>Step size between sample sizes. A value of 1 is recommended. Defaults to None.</p>
+</dd>
+<dt>cv (int, cross-validation generator or an interable): </dt><dd><p>Determines the cross-validation splitting strategy, as in scikit-learn. Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross validation,</p></li>
+<li><p>int, to specify the number of folds in a (Stratified)KFold,</p></li>
+<li><p>CV splitter,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, if the estimator is a classifier and y is either binary or multiclass,
+StratifiedKFold is used. In all other cases, K-Fold is used. These splitters are instantiated
+with shuffle=False so the splits will be the same across calls. Defaults to 5.</p>
+</dd>
+<dt>num_samples (int): </dt><dd><p>Number of iterations to shuffle data before determining subsamples. The first iteration 
+(index 0) is ALWAYS unshuffled (num_samples=1 implies no resampling at all, default). 
+Defaults to 100.</p>
+</dd>
+<dt>scoring (str, callable, list, tuple or dict): </dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to None.</p>
+</dd>
+<dt>verbose (bool): </dt><dd><p>Prints progress. Defaults to True.</p>
+</dd>
+<dt>n_jobs (int): </dt><dd><p>Number of jobs to run in parallel. Defaults to None. Training the estimator and computing the score are 
+parallelized over the cross-validation splits. None means 1 unless in a joblib.parallel_backend context.
+-1 means using all processors.</p>
+</dd>
+<dt>random_state (int): </dt><dd><p>Controls the randomness of the bootstrapping of the samples used when building sub-samples (if shuffle!=-1). 
+Defaults to None. Currently NOT implemented.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>PredictedScoreAndPower (tuple): </dt><dd><p>Contains the predicted score and power (in this order).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.sklearn_interface.resampling">
+<span id="adaptivesplit-sklearn-interface-resampling-module"></span><h2>adaptivesplit.sklearn_interface.resampling module<a class="headerlink" href="#module-adaptivesplit.sklearn_interface.resampling" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.PermTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.resampling.</span></span><span class="sig-name descname"><span class="pre">PermTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs=-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare=&lt;built-in</span> <span class="pre">function</span> <span class="pre">ge&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message='Permutation</span> <span class="pre">test'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#PermTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.PermTest" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="adaptivesplit.base.html#adaptivesplit.base.resampling.PermTest" title="adaptivesplit.base.resampling.PermTest"><code class="xref py py-class docutils literal notranslate"><span class="pre">PermTest</span></code></a></p>
+<p>Implements a permutation test.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.Resample">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.resampling.</span></span><span class="sig-name descname"><span class="pre">Resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_unshuffled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Resampling'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#Resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.Resample" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="adaptivesplit.base.html#adaptivesplit.base.resampling.Resample" title="adaptivesplit.base.resampling.Resample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resample</span></code></a></p>
+<p>Implements the resampling strategy.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.SubSampleCV">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.resampling.</span></span><span class="sig-name descname"><span class="pre">SubSampleCV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dummy_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_stat=&lt;function</span> <span class="pre">mean&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs=-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message='Calculating</span> <span class="pre">learning</span> <span class="pre">curve'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#SubSampleCV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.SubSampleCV" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adaptivesplit.sklearn_interface.resampling.Resample" title="adaptivesplit.sklearn_interface.resampling.Resample"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resample</span></code></a></p>
+<p>Calculates learning performance/power on subsamples of the whole data.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>estimator (estimator object): </dt><dd><p>This is assumed to implement the scikit-learn estimator interface.</p>
+</dd>
+<dt>sample_size (int): </dt><dd><p>Current sample size.</p>
+</dd>
+<dt>dummy_estimator (estimator object):</dt><dd><p>A scikit-learn-like dummy estimator to evaluate baseline performance. Defaults to None.
+If None, either DummyClassifier() or DummyRegressor() are used, based on ‘estimator’s type.</p>
+</dd>
+<dt>num_samples (int):</dt><dd><p>Number of iterations to shuffle data before determining subsamples. Defaults to 100.
+The first iteration (index 0) is ALWAYS unshuffled (num_samples=1 implies no resampling at all).</p>
+</dd>
+<dt>cv (int, cross-validation generator or an iterable):</dt><dd><p>Determines the cross-validation splitting strategy, as in scikit-learn. Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross validation,</p></li>
+<li><p>int, to specify the number of folds in a (Stratified)KFold,</p></li>
+<li><p>CV splitter,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, if the estimator is a classifier and y is either binary or multiclass,
+StratifiedKFold is used. In all other cases, K-Fold is used. These splitters are instantiated
+with shuffle=False so the splits will be the same across calls. Defaults to None.</p>
+</dd>
+<dt>cv_stat (callable):</dt><dd><p>Function for aggregating cross-validation-wise scores. Defaults to numpy.mean.</p>
+</dd>
+<dt>groups (array-like of shape (n_samples,)): </dt><dd><p>Group labels for the samples used while splitting the dataset into train/test set. This ‘groups’ 
+parameter changes the cross-validation strategy from K-fold to GroupKfold as implemented in Scikit-Learn.
+Defaults to None.</p>
+</dd>
+<dt>scoring (str, callable, list, tuple or dict): </dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to None.</p>
+</dd>
+<dt>power_estimator (callable):</dt><dd><p>Callable must be a power_estimator function, see the ‘create_power_estimator*’ factory functions.
+If None, power curve is not calculated. Defaults to None.</p>
+</dd>
+<dt>n_jobs (int): </dt><dd><p>Number of jobs to run in parallel. Defaults to -1.
+Training the estimator and computing the score are parallelized over the cross-validation splits.
+None means 1 unless in a joblib.parallel_backend context. -1 means using all processors.</p>
+</dd>
+<dt>verbose (bool): </dt><dd><p>Prints progress. Defaults to True.</p>
+</dd>
+<dt>message (str): </dt><dd><p>Message shown during calculations. Defaults to “Calculating learning curve”.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>SubSampledStats (tuple):</dt><dd><p>Contains the power and scores obtained during training/test with subsampled data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.SubSampleCV.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compare</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#SubSampleCV.fit_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.SubSampleCV.fit_transform" title="Permalink to this definition"></a></dt>
+<dd><p>Fit model using the current sample size.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.SubSampleCV.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#SubSampleCV.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.SubSampleCV.plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot function to check outputs from resampling. By default this is unused.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.SubSampleCV.subsample">
+<span class="sig-name descname"><span class="pre">subsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv_stat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/resampling.html#SubSampleCV.subsample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.SubSampleCV.subsample" title="Permalink to this definition"></a></dt>
+<dd><p>Convenience function to run resampling.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.resampling.SubSampledStats">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.resampling.</span></span><span class="sig-name descname"><span class="pre">SubSampledStats</span></span><a class="headerlink" href="#adaptivesplit.sklearn_interface.resampling.SubSampledStats" title="Permalink to this definition"></a></dt>
+<dd><p>Stores results given by “SubSampleCV”.</p>
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.sklearn_interface.split">
+<span id="adaptivesplit-sklearn-interface-split-module"></span><h2>adaptivesplit.sklearn_interface.split module<a class="headerlink" href="#module-adaptivesplit.sklearn_interface.split" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.split.AdaptiveSplit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.split.</span></span><span class="sig-name descname"><span class="pre">AdaptiveSplit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_sample_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'neg_mean_squared_error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_bootstrap_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plotting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'95%'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/split.html#AdaptiveSplit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.split.AdaptiveSplit" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Run the AdaptiveSplit model. This evaluates performance on multiple splits of the data by calculating
+the learning and power curves using bootstrap. The model works for both regression and classification
+tasks, depending on the scikit-learn estimator and type of score metric provided.</p>
+<p>If the total sample size provided to this class is higher than len(Y), the algorithm will predict the 
+learning and power curves for the additional samples. This is useful to check if a higher sample size is
+able to enhance model prediction.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>total_sample_size (int): </dt><dd><p>The total length of the data given as input. Defaults to “total_sample_size” as specified 
+in the configuration file.</p>
+</dd>
+<dt>scoring (str, callable, list, tuple or dict):</dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to “scoring” as specified in the configuration file.</p>
+</dd>
+<dt>cv (int, cross-validation generator or an iterable):</dt><dd><p>Determines the cross-validation splitting strategy, as in scikit-learn. Possible inputs for cv are:</p>
+<ul class="simple">
+<li><p>None, to use the default 5-fold cross validation,</p></li>
+<li><p>int, to specify the number of folds in a (Stratified)KFold,</p></li>
+<li><p>CV splitter,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For int/None inputs, if the estimator is a classifier and y is either binary or multiclass,
+StratifiedKFold is used. In all other cases, K-Fold is used. These splitters are instantiated
+with shuffle=False so the splits will be the same across calls. Defaults to “cv” as specified 
+in the configuration file.</p>
+</dd>
+<dt>step (int): </dt><dd><p>Step size between sample sizes. A value of 1 is recommended. Defaults to “step” as specified in
+the configuration file.</p>
+</dd>
+<dt>bootstrap_samples (int): </dt><dd><p>Number of samples generated during bootstrapping. Defaults to “bootstrap_samples” as
+specified in the configuration file.</p>
+</dd>
+<dt>power_bootstrap_samples (int): </dt><dd><p>Number of iteration during which samples are bootstrapped to calculate power. Defaults to
+“power_bootstrap_samples” as specified in the configuration file.</p>
+</dd>
+<dt>window_size (int): </dt><dd><p>Size of the rolling window used to calculate the slope of the power curve. 
+if fast_mode in the fit method is equal to true it is also used to calculate
+reduces sample sizes to use into fast mode. If None, defaults to “window_size” as
+specified in the configuration file.</p>
+</dd>
+<dt>verbose (bool): </dt><dd><p>Prints progress. Defaults to True.</p>
+</dd>
+<dt>plotting (bool): </dt><dd><p>Whether or not to plot the learning and the power curves after calculations. Defaults to True.</p>
+</dd>
+<dt>ci (str):</dt><dd><p>Intervals confidence used when plotting the learning and power curves. Defaults to 95%.</p>
+</dd>
+<dt>n_jobs (int):</dt><dd><p>Number of jobs to run in parallel. Defaults to “n_jobs” as specified in the configuration file.
+Training the estimator and computing the score are parallelized over the cross-validation splits.
+None means 1 unless in a joblib.parallel_backend context. -1 means using all processors.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>AdaptiveSplitResults (namedtuple):</dt><dd><p>Contains the results from the AdaptiveSplit algorithm, i.e. estimated stopping point, scores and power.</p>
+</dd>
+<dt>Figure (matplotlib.figure.Figure):</dt><dd><p>Plot illustrating the learning and power curves.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.split.AdaptiveSplit.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stratify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_size_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/split.html#AdaptiveSplit.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.split.AdaptiveSplit.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the AdaptiveSplit model.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>X (numpy.ndarray or pandas.DataFrame):</dt><dd><p>array-like of shape (n_samples, n_features). The data to fit as in scikit-learn. Can be a numpy array or 
+pandas DataFrame.</p>
+</dd>
+<dt>Y (numpy.ndarray or pandas.Series):</dt><dd><p>array-like of shape (n_samples,) or (n_samples, n_outputs).
+The target variable to try to predict in the case of supervised learning, as in scikit-learn.</p>
+</dd>
+<dt>estimator (estimator object): </dt><dd><p>Estimator object. A object of that type is instantiated for each grid point.
+This is assumed to implement the scikit-learn estimator interface. Either estimator needs to provide a score
+function, or scoring must be passed. If it is e.g. a GridSearchCV then nested cv is performed (recommended).</p>
+</dd>
+<dt>stratify (_type_, optional): </dt><dd><p>For classification tasks. If not None, use stratified sampling to account for class labels imbalance.
+Defaults to “stratify” as specified in the configuration file.</p>
+</dd>
+<dt>fast_mode (bool): </dt><dd><p>If True the algorithm is evaluated on reduced sample sizes to reduce runtime. Defaults to “fast_mode”
+as specified in the configuration file.</p>
+</dd>
+<dt>sample_size_multiplier (float): </dt><dd><p>Multiplier value to make sure the algorithm starts with adequate sample sizes. (Recommended value is 0.2). 
+Defaults to “sample_size_multiplier” as specified in the configuration file.</p>
+</dd>
+<dt>predict (bool, optional): </dt><dd><p>If True, try to predict the learning and power curve for additional samples.
+If total_sample_size == len(Y) it automatically turns to False. Defaults to True.</p>
+</dd>
+<dt>random_state (int, optional): </dt><dd><p>Controls the randomness of the bootstrapping of the samples used when building sub-samples 
+(if shuffle!=-1). Defaults to None.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-adaptivesplit.sklearn_interface.utils">
+<span id="adaptivesplit-sklearn-interface-utils-module"></span><h2>adaptivesplit.sklearn_interface.utils module<a class="headerlink" href="#module-adaptivesplit.sklearn_interface.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.utils.calculate_ci">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.utils.</span></span><span class="sig-name descname"><span class="pre">calculate_ci</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'95%'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/utils.html#calculate_ci"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.utils.calculate_ci" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate confidence intervals.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>X (list, np.ndarray, pd.Series): </dt><dd><p>1D array of shape (n_samples,).</p>
+</dd>
+<dt>ci (str, optional): </dt><dd><p>Confidence level to Return. Defaults to ‘95%’.
+90%, 95%, 98%, 99% are possible inputs.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>ci_lower: </dt><dd><p>Confidence intervals lower bound.</p>
+</dd>
+<dt>ci_upper:</dt><dd><p>Confidence intervals upper bound.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.utils.get_sklearn_scorer">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.utils.</span></span><span class="sig-name descname"><span class="pre">get_sklearn_scorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scoring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/utils.html#get_sklearn_scorer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.utils.get_sklearn_scorer" title="Permalink to this definition"></a></dt>
+<dd><p>Provides a scikit-learn scoring function given an input string.</p>
+<dl>
+<dt>Args:</dt><dd><dl>
+<dt>scoring (str, callable, list, tuple or dict):</dt><dd><p>Scikit-learn-like score to evaluate the performance of the cross-validated model on the test set.
+If scoring represents a single score, one can use:</p>
+<ul class="simple">
+<li><p>a single string (see The scoring parameter: defining model evaluation rules);</p></li>
+<li><p>a callable (see Defining your scoring strategy from metric functions) that returns a single value.</p></li>
+</ul>
+<p>If scoring represents multiple scores, one can use:</p>
+<ul class="simple">
+<li><p>a list or tuple of unique strings;</p></li>
+<li><p>a callable returning a dictionary where the keys are the metric names and the values are the metric scores;</p></li>
+<li><p>a dictionary with metric names as keys and callables a values.</p></li>
+</ul>
+<p>If None, the estimator’s score method is used. Defaults to “scoring” as specified in the configuration file.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>score_func (callable):</dt><dd><p>Scikit-Learn scoring function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="adaptivesplit.sklearn_interface.utils.statfun_as_callable">
+<span class="sig-prename descclassname"><span class="pre">adaptivesplit.sklearn_interface.utils.</span></span><span class="sig-name descname"><span class="pre">statfun_as_callable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stat_fun</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adaptivesplit/sklearn_interface/utils.html#statfun_as_callable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#adaptivesplit.sklearn_interface.utils.statfun_as_callable" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a statistical function.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>stat_fun (str, callable): </dt><dd><p>If this is a str, use sklearn.metrics.get_sklearn_scorer to make
+stat_fun a callable.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>stat_fun (callable): </dt><dd><p>Statistical function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

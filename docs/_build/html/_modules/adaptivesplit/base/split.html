@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>adaptivesplit.base.split &mdash; AdaptiveSplit 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> AdaptiveSplit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AdaptiveSplit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">adaptivesplit.base.split</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for adaptivesplit.base.split</h1><div class="highlight"><pre>
+<span></span><span class="c1"># from .base.utils import _optional_import_</span>
+<span class="c1"># power = _optional_import_(&quot;.sklearn_interface&quot;, &quot;pearsonr&quot;, &quot;scipy&quot;)</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../adaptivesplit.base.html#adaptivesplit.base.split.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">learning_curve</span><span class="p">,</span> <span class="n">learning_curve_predicted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_curve</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power_curve_lower</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+         <span class="n">power_curve_upper</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">power_curve_predicted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">training_curve</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+         <span class="n">dummy_curve</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="s1">&#39;95%&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+         <span class="n">subplot_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the results.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        learning_curve (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            The learning curve calculated during validation.</span>
+<span class="sd">        learning_curve_predicted (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            The predicted learning curve. Defaults to None.</span>
+<span class="sd">        power_curve (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            The calculated power curve. Defaults to None.</span>
+<span class="sd">        power_curve_lower (): </span>
+<span class="sd">            Power curve confidence intervals lower bound. Defaults to None.</span>
+<span class="sd">        power_curve_upper (): </span>
+<span class="sd">            Power curve confidence intervals upper bound. Defaults to None.</span>
+<span class="sd">        power_curve_predicted (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            The predicted power curve. Defaults to None.</span>
+<span class="sd">        training_curve (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            Learning curve calculated during training. Defaults to None.</span>
+<span class="sd">        dummy_curve (adaptivesplit.base.learning_curve.LearningCurve object): </span>
+<span class="sd">            Baseline curve calculated using a dummy estimator. Defaults to None.</span>
+<span class="sd">        stop (int): </span>
+<span class="sd">            Sample size where the stopping point lies. Defaults to None.</span>
+<span class="sd">        reason (str or list of str): </span>
+<span class="sd">            Reason or list of reasons describing how the stopping rule found the stopping point. Defaults to None.</span>
+<span class="sd">        ci (str): </span>
+<span class="sd">            Intervals confidence for the learning curve. Defaults to &#39;95%&#39;.</span>
+<span class="sd">        grid (bool): </span>
+<span class="sd">            Whether or not to configure the grid lines. Defaults to True.</span>
+<span class="sd">        subplot_kw (dict): </span>
+<span class="sd">            Dict with keywords passed to matplotlib used to create each subplot. Defaults to None.</span>
+<span class="sd">        gridspec_kw (dict): </span>
+<span class="sd">            Dict with keywords passed to matplotlib used to create the grid the subplots are placed on. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Figure (matplotlib.pyplot.figure): </span>
+<span class="sd">            Plot containing the learning and power curves with the estimated stopping point. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total_sample_size</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;figsize&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">learning_curve_predicted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">total_sample_size</span> <span class="o">=</span> <span class="n">learning_curve_predicted</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">power_curve_predicted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">total_sample_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">((</span><span class="n">total_sample_size</span><span class="p">,</span> <span class="n">power_curve_predicted</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="k">if</span> <span class="n">total_sample_size</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">total_sample_size</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">power_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="n">subplot_kw</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="n">gridspec_kw</span><span class="p">,</span>
+                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># frameon=False removes frames</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">.05</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="n">subplot_kw</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="n">gridspec_kw</span><span class="p">,</span>
+                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># todo: test me</span>
+
+    <span class="n">learning_curve</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">ci</span><span class="o">=</span><span class="n">ci</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">total_sample_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">learning_curve</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;keeplast&#39;</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="p">[</span><span class="n">total_sample_size</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dummy_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dummy_curve</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;keeplast&#39;</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="p">[</span><span class="n">total_sample_size</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span>
+                                                                                <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">training_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">training_curve</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;keeplast&#39;</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="p">[</span><span class="n">total_sample_size</span><span class="p">])</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span>
+                                                                                   <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">learning_curve_predicted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">learning_curve_predicted</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;observed learning curve&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted learning curve&#39;</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">learning_curve</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>  <span class="c1"># current sample size</span>
+
+    <span class="k">if</span> <span class="n">power_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">power_curve</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">power_curve</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="n">power_curve_lower</span><span class="p">,</span> <span class="n">y2</span><span class="o">=</span><span class="n">power_curve_upper</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.2</span><span class="p">))</span>
+        <span class="c1">#power_curve.stat(ci=ci).plot(color=&#39;red&#39;, ax=ax2)</span>
+
+        <span class="k">if</span> <span class="n">power_curve_predicted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">power_curve_predicted</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">ci</span><span class="o">=</span><span class="n">ci</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;obs power&#39;</span><span class="p">,</span> <span class="s1">&#39;pred power&#39;</span><span class="p">])</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">learning_curve</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="c1"># ax2.text(np.max(testing_curve.df.index), np.min(power_curve.stat().df[&#39;mid&#39;].values), &#39;now&#39;)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">stop</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">power_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">stop</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">power_curve</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="s1">&#39; STOP&#39;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">stop</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stop</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">learning_curve</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">reason</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="n">reason</span> <span class="o">=</span> <span class="s1">&#39;Reason: None&#39;</span>
+            <span class="k">elif</span> <span class="n">reason</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">reason</span> <span class="o">=</span> <span class="s1">&#39; Reason: &#39;</span> <span class="o">+</span> <span class="n">reason</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ADAPTIVESPLIT: STOP! &#39;</span> <span class="o">+</span> <span class="n">reason</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;ADAPTIVESPLIT: Continue collecting the training sample.&#39;</span>
+                          <span class="s1">&#39;Earliest stopping: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;ADAPTIVESPLIT. (No stopping rule provided.)&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">power_curve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="estimate_sample_size"><a class="viewcode-back" href="../../../adaptivesplit.base.html#adaptivesplit.base.split.estimate_sample_size">[docs]</a><span class="k">def</span> <span class="nf">estimate_sample_size</span><span class="p">(</span><span class="n">y_obs</span><span class="p">,</span>
+                         <span class="n">y_pred</span><span class="p">,</span>
+                         <span class="n">target_power</span><span class="p">,</span>
+                         <span class="n">power_estimator</span><span class="p">,</span>
+                         <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                         <span class="n">rel_pwr_threshold</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+                         <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute current sample size for power calculations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        y_obs (np.ndarray): </span>
+<span class="sd">            The observed target samples.</span>
+<span class="sd">        y_pred (np.ndarray): </span>
+<span class="sd">            The predicted target samples.</span>
+<span class="sd">        target_power (float): </span>
+<span class="sd">            Target power.</span>
+<span class="sd">        power_estimator (adaptivesplit.power.PowerEstimatorBootstrap): </span>
+<span class="sd">            Estimator to calculate power.</span>
+<span class="sd">        max_iter (int): </span>
+<span class="sd">            Max number of iterations for sample estimation. Defaults to 100.</span>
+<span class="sd">        rel_pwr_threshold (float): </span>
+<span class="sd">            Power threshold&#39;s tolerance. Defaults to 0.001.</span>
+<span class="sd">        learning_rate (float): </span>
+<span class="sd">            The learning rate value. Defaults to 0.05.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        sample_size (int): </span>
+<span class="sd">            The estimated sample size.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sample_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">power_ref</span> <span class="o">=</span> <span class="n">power_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">y_obs</span><span class="p">,</span>
+                                         <span class="n">y_pred</span><span class="p">,</span>
+                                         <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span>
+                                         <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">iter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">power_ref</span><span class="p">,</span> <span class="n">target_power</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="n">rel_pwr_threshold</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">iter</span> <span class="o">&lt;=</span> <span class="n">max_iter</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">power_ref</span> <span class="o">&gt;=</span> <span class="n">target_power</span><span class="p">:</span>
+            <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">learning_rate</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">power_ref</span> <span class="o">&lt;</span> <span class="n">target_power</span><span class="p">:</span>
+            <span class="n">sample_size</span> <span class="o">=</span> <span class="n">sample_size</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">learning_rate</span><span class="p">)</span>
+        <span class="nb">iter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">power_ref</span> <span class="o">=</span> <span class="n">power_estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">y_obs</span><span class="p">,</span>
+                                             <span class="n">y_pred</span><span class="p">,</span>
+                                             <span class="n">sample_size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">,</span>
+                                             <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">iter</span> <span class="o">==</span> <span class="p">(</span><span class="n">max_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Iteration limit reached, check results and adjust parameters if needed&#39;</span><span class="p">)</span>
+    <span class="c1"># ToDo: output the confidence intervals and expected score</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, G.Gallitto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
