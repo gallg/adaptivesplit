@@ -1,1 +1,4 @@
 .idea/
+manuscript/_build/
+manuscript/exports/
+**/.DS_Store

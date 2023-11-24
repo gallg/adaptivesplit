@@ -1,0 +1,55 @@
+version: 1
+project:
+  title: 
+  short_title: AdaptiveSplit
+  #thumbnail: ./thumbnail.png
+  # description:
+  keywords: []
+  license: CC-BY-4.0
+  github: https://github.com/pni-lab/adaptivesplit
+  # bibliography: []
+  authors:
+    - name: Giuseppe Gallitto
+      affiliations:
+        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen,Germany
+      email: giuseppe.gallitto@uk-essen.de
+      
+    - name: Robert Englert
+      affiliations:
+        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen, Germany
+      
+    - name: Balint Kincses
+      affiliations:
+        - Department of Neurology, University Medicine Essen, Germany
+        
+    - name: Raviteja Kotikalapudi
+      affiliations:
+        - Department of Neurology, University Medicine Essen, Germany
+        
+    - name: Jialin Li
+      affiliations:
+        - Department of Neurology, University Medicine Essen, Germany
+        - Max Planck School of Cognition, Leipzig, Germany
+  
+    - name: Ulrike Bingel
+      affiliations:
+        - Department of Neurology, University Medicine Essen, Germany
+        - Center for Translational Neuro- and Behavioral Sciences (C-TNBS), University Medicine Essen, Germany
+
+    - name: Tamas Spisak
+      affiliations:
+        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen, Germany
+        - Center for Translational Neuro- and Behavioral Sciences (C-TNBS), University Medicine Essen, Germany
+      orcid: 0000-0002-2942-0821
+      email: tamas.spisak@uk-essen.de
+      corresponding: True
+site:
+  template: article-theme
+  title: AdaptiveSplit
+  #analytics_google: G-XXXXXXXXXX # Measurement ID or Tracking ID
+  # logo:
+  nav: []
+  actions:
+    - title: PNI-lab
+      url: https://pni-lab.github.io/
+  domains: []
