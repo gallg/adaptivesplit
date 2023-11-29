@@ -1,8 +1,8 @@
 version: 1
 project:
-  title: 
+  title: AdaptiveSplit
   short_title: AdaptiveSplit
-  #thumbnail: ./thumbnail.png
+  #banner: x.jpg
   # description:
   keywords: []
   license: CC-BY-4.0
