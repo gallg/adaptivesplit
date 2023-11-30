@@ -2,12 +2,9 @@ version: 1
 project:
   title: AdaptiveSplit
   short_title: AdaptiveSplit
-  #banner: x.jpg
-  # description:
   keywords: []
   license: CC-BY-4.0
   github: https://github.com/pni-lab/adaptivesplit
-  # bibliography: []
   authors:
     - name: Giuseppe Gallitto
       affiliations:
@@ -46,8 +43,6 @@ project:
 site:
   template: article-theme
   title: AdaptiveSplit
-  #analytics_google: G-XXXXXXXXXX # Measurement ID or Tracking ID
-  # logo:
   nav: []
   actions:
     - title: PNI-lab

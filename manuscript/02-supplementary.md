@@ -1,4 +1,57 @@
+---
+exports:
+  - format: docx
+    output: exports/adaptivesplit_manuscript_si.docx
+---
 # Supplementary Material
+
+## Supplementary Figures
+
+
+:::{figure} figures/si-bcw-confmat.png
+:name: si-bcw-scatter
+:align: center
+:width: 40%
+Predictive performance (confusion matrix) of the model trained on in the BCW dataset to predict diagnosis. The model was trained on the whole dataset with nested cross-validation.
+:::
+
+:::{figure} figures/si-bcw-lc.png
+:name: si-bcw-scatter
+:align: center
+:width: 50%
+Learning curve (top) and power curve (bottom) of the model trained oon in the BCW dataset to predict diagnosis. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Accuracy as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
+:::
+
+:::{figure} figures/si-ixi-scatter.png
+:name: si-ixi-scatter
+:align: center
+:width: 50%
+Predictive performance of the model trained on gray matter probability images from the IXI dataset to predict age. The model was trained on the whole dataset with nested cross-validation. X-axis: true age, y-axis: predicted age.
+:::
+
+:::{figure} figures/si-ixi-lc.png
+:name: si-ixi-lc
+:align: center
+:width: 50%
+Learning curve (red) and power curve (blue) of the model trained on gray matter probability images from the IXI dataset to predict age. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Pearson's correlation as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
+:::
+
+:::{figure} figures/si-hcp-scatter.png
+:name: si-hcp-scatter
+:align: center
+:width: 50%
+Predictive performance of the model trained on resting state functional connectivity data from the HCP dataset to predict fluid intelligence (PMAT24_A_CR). The model was trained on the whole dataset with nested cross-validation. X-axis: true age, y-axis: predicted age.
+:::
+
+
+:::{figure} figures/si-hcp-lc.png
+:name: si-hcp-lc
+:align: center
+:width: 50%
+Learning curve (red) and power curve (blue) of the model trained on resting state functional connectivity data from the HCP dataset to predict fluid intelligence (PMAT24_A_CR). The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Pearson's correlation as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
+:::
+
+## Supplementary Tables
 
 ### Supplementary Table 1
 Manuscripts, commentaries, and editorials on the topic of brain-behavior associations and their reproducibility, related to [](https://doi.org/10.1038/s41586-022-04492-9). See the up-to-date list here: https://spisakt.github.io/BWAS_comment/
