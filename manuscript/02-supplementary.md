@@ -9,17 +9,17 @@ exports:
 
 
 :::{figure} figures/si-bcw-confmat.png
-:name: si-bcw-scatter
+:name: si-bcw-confmat
 :align: center
 :width: 40%
 Predictive performance (confusion matrix) of the model trained on in the BCW dataset to predict diagnosis. The model was trained on the whole dataset with nested cross-validation.
 :::
 
 :::{figure} figures/si-bcw-lc.png
-:name: si-bcw-scatter
+:name: si-bcw-lc
 :align: center
 :width: 50%
-Learning curve (top) and power curve (bottom) of the model trained oon in the BCW dataset to predict diagnosis. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Accuracy as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
+Learning curve (top) and power curve (bottom) of the model trained on in the BCW dataset to predict diagnosis. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Accuracy as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
 :::
 
 :::{figure} figures/si-ixi-scatter.png
@@ -75,7 +75,7 @@ Manuscripts, commentaries, and editorials on the topic of brain-behavior associa
 | Thirion B.                       | On the statistics of brain/behavior associations | [OHBM Aperture Neuro](10.52294/51f2e656-d4da-457e-851e-139131a68f14)           | 
 | Tiego J., Fornito A.                     | Putting behaviour back into brain–behaviour correlation analyses | [OHBM Aperture Neuro](10.52294/2f9c5854-d10b-44ab-93fa-d485ef5b24f1)            | 
 | Lucina QU.                     | Brain-behavior associations depend heavily on user-defined criteria | [OHBM Aperture Neuro](https://doi.org/10.52294/5ba14033-72bb-4915-81a3-fa221302818a) | 
-| Valk SL., Hettner MD.                     |   ' | [OHBM Aperture Neuro](10.52294/de841a29-d684-4707-9042-5bbd3d764f84)            | 
+| Valk SL., Hettner MD.                     |   Commentary on ‘Reproducible brain-wide association studies require thousands of individuals’ | [OHBM Aperture Neuro](10.52294/de841a29-d684-4707-9042-5bbd3d764f84)            | 
 | Kong XZ., et al.                   | Scanning reproducible brain-wide associations: sample size is all you need? | [Psychoradiology](https://doi.org/10.1093/psyrad/kkac010)            | 
 | J. Goltermann, et al. | Cross-validation for the estimation of effect size generalizability in mass-univariate brain-wide association studies | [BioRxiv](https://doi.org/10.1101/2023.03.29.534696) | 
 | Kang K., et al. | Study design features that improve effect sizes in cross-sectional and longitudinal brain-wide association studies | [BioRxiv](https://doi.org/10.1101/2023.05.29.542742) |
