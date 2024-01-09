@@ -12,14 +12,14 @@ exports:
 :name: si-bcw-scatter
 :align: center
 :width: 40%
-Predictive performance (confusion matrix) of the model trained on in the BCW dataset to predict diagnosis. The model was trained on the whole dataset with nested cross-validation.
+Predictive performance (confusion matrix) of the model trained on the BCW dataset to predict diagnosis. The model was trained on the whole dataset with nested cross-validation.
 :::
 
 :::{figure} figures/si-bcw-lc.png
 :name: si-bcw-scatter
 :align: center
 :width: 50%
-Learning curve (top) and power curve (bottom) of the model trained oon in the BCW dataset to predict diagnosis. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Accuracy as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
+Learning curve (top) and power curve (bottom) of the model trained on the BCW dataset to predict diagnosis. The maximum sample size (i.e. the whole dataset) was considered as the "sample size budget". X-axis: $n_{act}$; y-axis (learning curve): Accuracy as a measure of predictive performance; y-axis (power curve): statistical power of the remaining sample to confirm the model's validity.
 :::
 
 :::{figure} figures/si-ixi-scatter.png
