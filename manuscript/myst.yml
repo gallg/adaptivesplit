@@ -8,12 +8,13 @@ project:
   authors:
     - name: Giuseppe Gallitto
       affiliations:
-        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen,Germany
+        - Center for Translational Neuro- and Behavioral Sciences (C-TNBS), University Medicine Essen, Germany
+        - Department of Neurology, University Medicine Essen, Germany
       email: giuseppe.gallitto@uk-essen.de
       
     - name: Robert Englert
       affiliations:
-        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen, Germany
+        - Department of Diagnostic and Interventional Radiology and Neuroradiology, University Medicine Essen, Germany
       
     - name: Balint Kincses
       affiliations:
@@ -27,6 +28,10 @@ project:
       affiliations:
         - Department of Neurology, University Medicine Essen, Germany
         - Max Planck School of Cognition, Leipzig, Germany
+
+    - name: Kevin Hoffschlag
+      affiliations:
+        - Department of Neurology, University Medicine Essen, Germany
   
     - name: Ulrike Bingel
       affiliations:
@@ -35,7 +40,7 @@ project:
 
     - name: Tamas Spisak
       affiliations:
-        - Department of Diagnostic and Interventional Radiology and Neuroradiology,  University Medicine Essen, Germany
+        - Department of Diagnostic and Interventional Radiology and Neuroradiology, University Medicine Essen, Germany
         - Center for Translational Neuro- and Behavioral Sciences (C-TNBS), University Medicine Essen, Germany
       orcid: 0000-0002-2942-0821
       email: tamas.spisak@uk-essen.de
