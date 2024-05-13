@@ -277,6 +277,11 @@ The proposed adaptive splitting design can advance the development of predictive
 
 In conclusion, registered models provide a simple approach to guarantee the independence of model discovery and external validation and for the development and initial evaluation of registered models with unknown power, the introduced adaptive splitting procedure provides a robust and flexible approach to determine the optimal ratio of data to be used for model discovery and external validation. Together, registered models and the adaptive splitting procedure, address several common issues in the field, including overfitting, cross-validation failure, and boost the reliability and reproducibility.
 
+##### **Acknowledgements**
+
+The work is funded by the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) - Project-ID 422744262 - TRR 289 (Gefördert durch die Deutsche Forschungsgemeinschaft (DFG) – Projektnummer 422744262 – TRR 289).
+
+
 [^adaptive-split]: https://github.com/pni-lab/adaptivesplit
 [^ixi]: https://brain-development.org/ixi-dataset/
 [^nilearn]: http://nilearn.github.io/

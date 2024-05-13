@@ -2,3 +2,4 @@
 manuscript/_build/
 manuscript/exports/
 **/.DS_Store
+**/__pycache__
