@@ -7,7 +7,7 @@ LONG_DESCRIPTION = 'External validation of machine learning models with adaptive
 # Setting up
 setup(
     name="adaptivesplit",
-    version="0.0.1",
+    version=VERSION,
     author="PNI Lab (Predictive NeuroImaging Laboratory)",
     author_email="<giuseppe.gallitto@uk-essen.de>",
     description=DESCRIPTION,
