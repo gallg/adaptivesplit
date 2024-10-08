@@ -21,7 +21,17 @@ This prints out the results and plots the learning and power curves.
 An extended, working example can be found in ["notebooks/example.ipynb"](notebooks/example.ipynb)
 
 ## Documentation
-The package documentation is available in ["docs/_build/html/index.html"](docs/_build/html/index.html).
+The package documentation is available in the docs folder: ["docs/_build/html/index.html"](docs/_build/html/index.html).
+
+## Installation
+The package can be installed in two simple commands:
+
+    # install the main package;
+    pip install git+https://github.com/pni-lab/adaptivesplit
+
+    # install regressors as a dependency;
+    pip install git+https://github.com/gallg/regressors
+    
 
 ## Concept
 You can find an extensive illustration of the concept behind the AdaptiveSplit package in our preprint 
