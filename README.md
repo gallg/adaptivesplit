@@ -18,10 +18,10 @@ models.
     stop = res.estimated_stop
 
 This prints out the results and plots the learning and power curves.
-An extended, working example can be found in ["notebooks/example.ipynb"](notebooks/example.ipynb)
+An extended, working example can be found in ["our example notebook"](notebooks/example.ipynb)
 
 ## Documentation
-The package documentation is available in the docs folder: ["docs/_build/html/index.html"](docs/_build/html/index.html).
+The package documentation is available in the docs folder.
 
 ## Installation
 The package can be installed in two simple commands:
@@ -31,7 +31,17 @@ The package can be installed in two simple commands:
 
     # install regressors as a dependency;
     pip install git+https://github.com/gallg/regressors
-    
+
+If you don't want to utilize the package with default parameters, but you want to customize your stopping
+rule, please clone the repository without installing adaptivesplit as a package. **Remember to install regressors
+as a dependency**.
+
+    # clone the repository;
+    git clone https://github.com/pni-lab/adaptivesplit
+
+cloning the repository allows easy access to the ["configuration file"](adaptivesplit/settings.conf) used to
+easily modify the stopping rule criteria. Once the repo is cloned you can immediately start using adaptivesplit with
+["our example notebook"](notebooks/example.ipynb)
 
 ## Concept
 You can find an extensive illustration of the concept behind the AdaptiveSplit package in our preprint 
