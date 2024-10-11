@@ -21,7 +21,7 @@ This prints out the results and plots the learning and power curves.
 An extended, working example can be found in ["our example notebook"](notebooks/example.ipynb)
 
 ## Documentation
-The package documentation is available in the docs folder.
+The package documentation is available [here](https://pni-lab.github.io/adaptivesplit/).
 
 ## Installation
 The package can be installed in two simple commands:
@@ -45,8 +45,8 @@ easily modify the stopping rule criteria. Once the repo is cloned you can immedi
 
 ## Concept
 You can find an extensive illustration of the concept behind the AdaptiveSplit package in our preprint 
-[here](). The paper also describes why AdaptiveSplit is preferable to a fixed data splitting strategy 
-(e.g pareto split).
+[here](https://www.biorxiv.org/content/10.1101/2023.12.01.569626v1). The paper also describes why AdaptiveSplit is preferable 
+to a fixed data splitting strategy (e.g pareto split).
 
 The concept, in short, is shown by the image below:
 ![alt text](docs/figures/concept.png "Title")
