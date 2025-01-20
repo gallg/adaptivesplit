@@ -18,7 +18,9 @@ models.
     stop = res.estimated_stop
 
 This prints out the results and plots the learning and power curves.
-An extended, working example can be found in ["our example notebook"](notebooks/example.ipynb)
+
+- An extended, working example can be found in ["our example notebook"](notebooks/example.ipynb)
+- A description of possible warnings frequently encountered during runtime can be found in ["our warnings notebook"](notebooks/warnings.ipynb)
 
 ## Documentation
 The package documentation is available [here](https://pni-lab.github.io/adaptivesplit/).
